@@ -79,13 +79,14 @@ async def login(
             detail="Incorrect email, password, or account is deactivated",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    with db.begin():
-        user.last_login = datetime.utcnow()
-        db.commit()
+    user.last_login = datetime.utcnow()
+    db.commit()
+    db.refresh(user)  # optional: reload the updated user
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     refresh_token_expires = timedelta(days=7)
     access_token = create_access_token(
-        data={"sub": user.email, "scopes": [user.role.value]},
+        data={"sub": user.email},
         expires_delta=access_token_expires
     )
     refresh_token = create_refresh_token(
