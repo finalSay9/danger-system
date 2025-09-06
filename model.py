@@ -6,6 +6,8 @@ from typing import Optional
 import enum
 from database import Base
 from datetime import datetime
+from fastapi import WebSocket, Depends
+from sqlalchemy.orm import Session
 
 # Association table for many-to-many relationship between User and Chat
 chat_participants = Table(
@@ -67,7 +69,7 @@ class Message(Base):
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     sender: Mapped["User"] = relationship("User", foreign_keys=[sender_id])
     receiver: Mapped["User"] = relationship("User", foreign_keys=[receiver_id])
-
+    chat: Mapped["Chat"] = relationship("Chat", back_populates="messages") 
 class Chat(Base):
     __tablename__ = "chats"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -77,7 +79,3 @@ class Chat(Base):
     participants = relationship("User", secondary="chat_participants", back_populates="chats")
     messages = relationship("Message", back_populates="chat")
 
-class ChatParticipant(Base):
-    __tablename__ = "chat_participants"
-    chat_id: Mapped[int] = mapped_column(Integer, ForeignKey("chats.id"), primary_key=True)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)

@@ -4,6 +4,7 @@ from database import get_db
 import model
 import schema
 from datetime import datetime
+from . routes.auth import get_current_user
 
 router = APIRouter(
     prefix='/websocket',
