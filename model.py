@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, DateTime, Enum as SqlEnum
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, DateTime, Enum as SqlEnum, Table
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import CITEXT  # Optional: for PostgreSQL
@@ -7,7 +7,13 @@ import enum
 from database import Base
 from datetime import datetime
 
-
+# Association table for many-to-many relationship between User and Chat
+chat_participants = Table(
+    "chat_participants",
+    Base.metadata,
+    Column("chat_id", Integer, ForeignKey("chats.id"), primary_key=True),
+    Column("user_id", Integer, ForeignKey("users.id"), primary_key=True)
+)
 
 class Gender(str, enum.Enum):
     MALE = 'male'
@@ -40,6 +46,8 @@ class User(Base):
     updated_at: Mapped[Optional[DateTime]] = mapped_column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
     last_login: Mapped[Optional[DateTime]] = mapped_column(DateTime(timezone=True), nullable=True)
     deleted_at: Mapped[Optional[DateTime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Relationship to chats
+    chats = relationship("Chat", secondary=chat_participants, back_populates="participants")
 
     __table_args__ = (
         # Optional: Add check constraint for email format (PostgreSQL only)

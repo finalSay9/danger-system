@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import users,auth
+from routes import users,auth, messages
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -11,6 +11,7 @@ app = FastAPI(
 
 app.include_router(users.router, tags=['users'])
 app.include_router(auth.router, tags=['auth'])
+app.include_router(messages.router, tags=['messages'])
 
 # Replace "*" with the exact frontend origin
 app.add_middleware(
