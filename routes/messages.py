@@ -29,6 +29,7 @@ async def create_message(
         sender_id=message.sender_id,
         receiver_id=message.receiver_id,
         content=message.content,
+        chat_id=message.chat_id, 
         message_type=message.message_type,
         attachment_url=message.attachment_url,
         parent_message_id=message.parent_message_id,
@@ -39,3 +40,4 @@ async def create_message(
     db.commit()
     db.refresh(db_message)
     return db_message
+

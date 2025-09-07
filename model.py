@@ -94,3 +94,4 @@ class Message(Base):
     
     # Self-referential relationship for reply messages
     parent_message: Mapped[Optional["Message"]] = relationship("Message", remote_side=[id])
+    

@@ -20,6 +20,7 @@ class ChatType(str, Enum):
     DIRECT = "direct"
     GROUP = "group"
 
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr
@@ -98,6 +99,7 @@ class MessageCreate(BaseModel):
     sender_id: int = Field(..., description="ID of the user sending the message")
     receiver_id: int = Field(..., description="ID of the user receiving the message")
     content: str = Field(..., min_length=1, max_length=2000, description="Message content (text, URL, etc.)")
+    chat_id: int = Field(..., description='Id that belong to chat type whether group or individual')
     message_type: MessageType = Field(MessageType.TEXT, description="Type of message (text, image, file)")
     attachment_url: Optional[str] = Field(None, description="URL of an attached file or image")
     parent_message_id: Optional[int] = Field(None, description="ID of the parent message for replies")
