@@ -13,6 +13,7 @@ from datetime import datetime
 
 router = APIRouter(prefix="/messages", tags=["messages"])
 
+
 @router.post("/", response_model=schema.MessageResponse, status_code=status.HTTP_201_CREATED)
 async def create_message(
     message: schema.MessageCreate,

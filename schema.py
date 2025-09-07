@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, field_validator, ConfigDict,Field
 from enum import Enum
 import re
+from pydantic_core.core_schema import ValidationInfo
 
 
 class Gender(str, Enum):
@@ -116,9 +117,10 @@ class MessageCreate(BaseModel):
             raise ValueError("Invalid URL format for attachment")
         return value
 
-    @field_validator("sender_id", "receiver_id")
-    def validate_user_ids(cls, value: int, values: dict) -> int:
-        if "sender_id" in values and value == values["sender_id"]:
+    @field_validator("receiver_id")
+    def validate_user_ids(cls, value: int, info: ValidationInfo) -> int:
+        sender_id = info.data.get("sender_id")
+        if sender_id is not None and value == sender_id:
             raise ValueError("Sender and receiver cannot be the same")
         return value
 
