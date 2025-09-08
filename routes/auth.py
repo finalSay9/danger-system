@@ -28,6 +28,7 @@ router = APIRouter(
     tags=['auth']
 )
 
+
 # Configuration
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/token')

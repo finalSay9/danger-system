@@ -72,4 +72,10 @@ def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Failed to create user due to database constraint"
         )
+
+
+
+@router.get("/me", response_model=schema.UserResponse)
+async def get_current_user_data(current_user: model.User = Depends(auth.get_current_user)):
+    return current_user
         
