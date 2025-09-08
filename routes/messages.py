@@ -39,3 +39,10 @@ async def create_message(
     db.refresh(db_message)
     return db_message
 
+
+
+
+@router.get("/", response_model=list[schema.MessageResponse])
+async def get_chats(current_user: model.User = Depends(get_current_user), db: Session = Depends(get_db)):
+  chats = db.query(model.Message).filter(model.Message.parent_message.any(id=current_user.id)).all()
+  return chats

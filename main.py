@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routes import users,auth, messages, chats
 from fastapi.middleware.cors import CORSMiddleware
+import dangersocket
 
 
 
@@ -12,7 +13,11 @@ app = FastAPI(
 app.include_router(users.router, tags=['users'])
 app.include_router(auth.router, tags=['auth'])
 app.include_router(messages.router, tags=['messages'])
-app.include_router(chats.router, tags='chats')
+app.include_router(chats.router, tags=['chats'])
+app.include_router(dangersocket.router, tags=['socket'])
+
+
+
 
 # Replace "*" with the exact frontend origin
 app.add_middleware(
