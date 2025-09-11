@@ -5,10 +5,11 @@ from . auth import get_current_user
 from database import get_db
 import schema
 import model
+from datetime import datetime
 
 router = APIRouter(prefix="/chats", tags=["chats"])
 
-@router.post("/", response_model=schema.Chat)
+@router.post("/", response_model=schema.ChatResponse)
 async def create_chat(chat: schema.ChatCreate, current_user: model.User = Depends(get_current_user), db: Session = Depends(get_db)):
     if not chat.participant_ids or current_user.id not in chat.participant_ids:
         raise HTTPException(status_code=400, detail="Invalid participant IDs")
@@ -33,7 +34,7 @@ async def create_chat(chat: schema.ChatCreate, current_user: model.User = Depend
     )
     return db_chat
 
-@router.get("/", response_model=list[schema.Chat])
+@router.get("/", response_model=list[schema.ChatResponse])
 async def get_chats(current_user: model.User = Depends(get_current_user), db: Session = Depends(get_db)):
     chats = (
         db.query(model.Chat)
